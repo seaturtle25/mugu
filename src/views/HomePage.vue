@@ -3,8 +3,10 @@
     <h1>MUGU - 你的學分精算師</h1>
     <img :src="require('@/assets/Mugu_happy.png')" alt="Mugu" id="mugu-img">
     <div>
-        <button @click="">註冊</button>
-        <button @click="">登入</button>
+        <router-link to="/register">
+          <button>註冊</button>
+        </router-link>
+        <button>登入</button>
     </div>
   </div>
 </template>
@@ -17,16 +19,15 @@ export default {
 
 <style scoped>
 #head{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  @apply flex flex-col items-center mx-auto
 }
 h1 {
-  color: #310d00;
+  @apply text-custom-brown
 }
 #mugu-img{
-    width: 30%;
-    height: auto;
+  @apply w-60
+}
+button {
+  @apply bg-custom-brown bg-opacity-100 text-white px-4 py-2 rounded mx-2 hover:bg-opacity-80 transition;
 }
 </style>
