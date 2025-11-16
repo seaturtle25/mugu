@@ -1,27 +1,31 @@
 <template>
-  <div id="head">
-    <h2>註冊</h2>
-    <div class="form-row">
-      <span>姓名</span>
-      <input type="text" v-model="formData.name" />
+  <div class="contain">
+    <div class="contain-in">
+      <div id="head">
+        <h2>註冊</h2>
+        <div class="form-row">
+          <span>姓名</span>
+          <input type="text" v-model="formData.name" />
+        </div>
+        <div class="form-row">
+          <span>電子郵件</span>
+          <input type="email" v-model="formData.email" />
+        </div>
+        <div class="form-row">
+          <span>帳號</span>
+          <input type="text" v-model="formData.username" />
+        </div>
+        <div class="form-row">
+          <span>密碼</span>
+          <input type="password" v-model="formData.passwd" />
+        </div>
+        <div class="form-row">
+          <span>密碼確認</span>
+          <input type="password" v-model="formData.passwdCheck" />
+        </div>
+        <button @click="submit" class="submit-btn">送出</button>
+      </div>
     </div>
-    <div class="form-row">
-      <span>電子郵件</span>
-      <input type="email" v-model="formData.email" />
-    </div>
-    <div class="form-row">
-      <span>帳號</span>
-      <input type="text" v-model="formData.username" />
-    </div>
-    <div class="form-row">
-      <span>密碼</span>
-      <input type="password" v-model="formData.passwd" />
-    </div>
-    <div class="form-row">
-      <span>密碼確認</span>
-      <input type="password" v-model="formData.passwdCheck" />
-    </div>
-    <button @click="submit" class="submit-btn">送出</button>
   </div>
 </template>
 
@@ -48,8 +52,16 @@ export default {
 </script>
 
 <style scoped>
+.contain {
+  @apply relative bg-[url(@/assets/Background.png)] min-h-screen bg-cover bg-center bg-no-repeat;
+}
+
+.contain-in {
+  @apply relative z-10 flex flex-col items-center justify-center min-h-screen;
+}
+
 #head{
-  @apply flex flex-col items-center w-80 px-12 py-2 mx-auto mt-36 bg-custom-skin rounded-lg shadow-2xl font-contentFont;
+  @apply relative z-10 flex flex-col items-center w-80 px-8 pb-4 bg-custom-skin rounded-lg shadow-2xl font-contentFont;
 }
 
 h2 {

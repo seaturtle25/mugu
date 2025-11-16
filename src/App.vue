@@ -2,12 +2,14 @@
   <nav>
     <router-link to="/">MUGU-你的學分精算師</router-link>
   </nav>
-  <router-view/>
+  <div class="pt-16">
+    <router-view/>
+  </div>
 </template>
 
 <style>
 nav {
-  @apply p-4 font-contentFont;
+  @apply fixed top-0 left-0 w-full p-4 z-20 bg-white/80 backdrop-blur-md font-contentFont;
 }
 
 nav a {
