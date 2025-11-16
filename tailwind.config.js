@@ -6,8 +6,15 @@ module.exports = {
       colors: {
         'custom-brown': '#310d00',
         'custom-skin': '#f3d7c7'
+      },
+      fontFamily: {
+        titleFont: ['MarukoTC-Medium'],
+        contentFont: ['MarukoTC-Regular']
       }
     },
+  },
+  corePlugins: {
+    preflight: false,
   },
   plugins: [],
 }

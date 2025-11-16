@@ -1,14 +1,6 @@
 <template>
   <div id="head">
-    <h2>註冊</h2>
-    <div class="form-row">
-      <span>姓名</span>
-      <input type="text" v-model="formData.name" />
-    </div>
-    <div class="form-row">
-      <span>電子郵件</span>
-      <input type="email" v-model="formData.email" />
-    </div>
+    <h2>登入</h2>
     <div class="form-row">
       <span>帳號</span>
       <input type="text" v-model="formData.username" />
@@ -17,25 +9,18 @@
       <span>密碼</span>
       <input type="password" v-model="formData.passwd" />
     </div>
-    <div class="form-row">
-      <span>密碼確認</span>
-      <input type="password" v-model="formData.passwdCheck" />
-    </div>
     <button @click="submit" class="submit-btn">送出</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: "RegisterPage",
+  name: "LoginPage",
   data() {
     return {
       formData: {
-        name: '', 
-        email: '',
         username: '', 
-        passwd: '', 
-        passwdCheck: '',
+        passwd: ''
       },
     };
   },
