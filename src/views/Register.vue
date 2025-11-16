@@ -44,10 +44,40 @@ export default {
     };
   },
   methods: {
-    submit() {
-      console.log(this.formData);
-    },
-  },
+    async submit() {
+      console.log("clicked");
+      if(this.formData.passwd !== this.formData.passwdCheck) {
+        alert('密碼不一致!');
+        return;
+      }
+      try {
+        const res = await fetch('http://localhost:3000/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: this.formData.name,
+            email: this.formData.email,
+            username: this.formData.username,
+            password: this.formData.passwd, // 對應 User Schema
+          }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert('註冊成功！');
+          console.log(data);
+        } else {
+          alert('註冊失敗: ' + data.message);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('註冊發生錯誤');
+      }
+    }
+  }
 };
 </script>
 
