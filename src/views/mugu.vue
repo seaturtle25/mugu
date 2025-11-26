@@ -1,26 +1,49 @@
-import Mugu from '../views/mugu.vue' // 引入您建立的組件
-
-const routes = [
-  // ... 其他路由
-  {
-    path: '/mugu', // 這是您在網址列要輸入的路徑
-    name: 'Mugu',
-    component: Mugu // 這是您剛剛創建的組件
-  }
-]
 <template>
-  <div class="mugu-page">
-    <h1>MUGU</h1>
-    <!-- 之後這裡會放你的表情變化 UI -->
+  <div class="mugu-container">
+    <MuguAvatar :type="avatarType" @poke="onPoke" />
+
+    <ControlPanel
+      :avatarType="avatarType"
+      @changeType="handleChangeType"
+      @openDiary="showDiary = true"
+    />
+
+    <AudioPlayer ref="audioPlayer" />
+
+    <Diary v-if="showDiary" @close="showDiary = false" />
   </div>
 </template>
 
 <script setup>
-    // 未來在這裡放程式邏輯
+import { ref } from 'vue'
+import MuguAvatar from './MuguAvatar.vue'
+import ControlPanel from './ControlPanel.vue'
+import Diary from './Diary.vue'
+import AudioPlayer from './AudioPlayer.vue'
+
+const avatarType = ref('default')
+const showDiary = ref(false)
+
+function onPoke() {
+  console.log("你戳了Mugu一下！")
+  // 這裡可以擴充：切換表情、播放音效、增加互動計數等
+}
+
+function handleChangeType(newType) {
+  avatarType.value = newType
+  console.log('切換為', newType)
+}
 </script>
 
-<style scoped>
-    .mugu-page {
-    padding: 20px;
-    }
+<style>
+.mugu-container {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #fef8ff;
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  align-items: flex-start;
+}
 </style>
