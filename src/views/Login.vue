@@ -51,6 +51,7 @@ export default {
           console.log('Username:', data.username);
           localStorage.setItem('token', data.token);
           localStorage.setItem('username', data.username);
+          this.$root.isLoggedIn = true;
           this.$router.push('/');
         }else{
           alert('登入失敗: ' + data.message);

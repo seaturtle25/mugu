@@ -1,15 +1,20 @@
 <template>
-  <nav>
-    <div v-if="!isLoggedIn">
-      <router-link to="/">MUGU-你的學分精算師</router-link>
+  <div :key="isLoggedIn">
+    <nav>
+      <div v-if="!isLoggedIn">
+        <router-link to="/">MUGU-你的學分精算師</router-link>
+      </div>
+      <div v-else>
+        <router-link to="/">MUGU-你的學分精算師</router-link>
+        <div>
+          <router-link to="/control">控制頁面</router-link>
+          <button id="logout-btn" @click="logout">登出</button>
+        </div>
+      </div>
+    </nav>
+    <div class="pt-16">
+      <router-view/>
     </div>
-    <div v-else>
-      <router-link to="/">MUGU-你的學分精算師</router-link>
-      <button id="logout-btn" @click="logout">登出</button>
-    </div>
-  </nav>
-  <div class="pt-16">
-    <router-view :key="isLoggedIn"/>
   </div>
 </template>
 
