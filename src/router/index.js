@@ -21,6 +21,11 @@ const routes = [
     path: '/control',
     name: 'ControlPage',
     component: () => import('../views/ControlPage.vue')
+  },
+  {
+    path: '/mugu',
+    name: 'Mugu',
+    component: () => import('../views/mugu.vue')
   }
 ]
 

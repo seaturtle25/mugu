@@ -1,37 +1,62 @@
 <template>
   <div class="mugu-container">
-    <MuguAvatar :type="avatarType" @poke="onPoke" />
+    <MuguAvatar 
+      :type="avatarType"
+      @poke="handlePoke"
+    />
 
     <ControlPanel
-      :avatarType="avatarType"
+      :currentType="avatarType"
       @changeType="handleChangeType"
       @openDiary="showDiary = true"
     />
 
     <AudioPlayer ref="audioPlayer" />
 
-    <Diary v-if="showDiary" @close="showDiary = false" />
+    <Diary 
+      v-if="showDiary"
+      @close="showDiary = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import MuguAvatar from './MuguAvatar.vue'
-import ControlPanel from './ControlPanel.vue'
-import Diary from './Diary.vue'
-import AudioPlayer from './AudioPlayer.vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import MuguAvatar from '../components/MuguAvatar.vue'
+import ControlPanel from '../components/ControlPanel.vue'
+import Diary from '../components/Diary.vue'
+import AudioPlayer from '../components/AudioPlayer.vue'
+
+const API_STATE_URL = 'http://localhost:3000/api/mugu/state'
 
 const avatarType = ref('default')
 const showDiary = ref(false)
 
-function onPoke() {
-  console.log("你戳了Mugu一下！")
-  // 這裡可以擴充：切換表情、播放音效、增加互動計數等
+onMounted(async () => {
+  try {
+    const res = await axios.get(API_STATE_URL)
+    if (res.data && res.data.currentType) {
+      avatarType.value = res.data.currentType
+      console.log('已從資料庫讀取 Mugu 狀態:', avatarType.value)
+    }
+  } catch (e) {
+    console.warn('無法連上後端，將使用預設表情', e)
+  }
+})
+
+function handlePoke() {
+  console.log("主程式收到:Mugu 被戳了一下！")
 }
 
-function handleChangeType(newType) {
+async function handleChangeType(newType) {
   avatarType.value = newType
-  console.log('切換為', newType)
+  try {
+    await axios.post(API_STATE_URL, { currentType: newType })
+    console.log('狀態已同步到資料庫:', newType)
+  } catch (e) {
+    console.error('狀態同步失敗:', e)
+  }
 }
 </script>
 
@@ -42,8 +67,8 @@ function handleChangeType(newType) {
   overflow: hidden;
   background: #fef8ff;
   display: flex;
-  gap: 24px;
-  padding: 24px;
-  align-items: flex-start;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
 }
 </style>
