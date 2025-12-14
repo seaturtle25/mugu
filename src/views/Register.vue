@@ -4,16 +4,16 @@
       <div id="head">
         <h2>註冊</h2>
         <div class="form-row">
-          <span>姓名</span>
+          <span>暱稱</span>
           <input type="text" v-model="formData.name" />
-        </div>
-        <div class="form-row">
-          <span>電子郵件</span>
-          <input type="email" v-model="formData.email" />
         </div>
         <div class="form-row">
           <span>帳號</span>
           <input type="text" v-model="formData.username" />
+        </div>
+        <div class="form-row">
+          <span>電子郵件</span>
+          <input type="email" v-model="formData.email" />
         </div>
         <div class="form-row">
           <span>密碼</span>
