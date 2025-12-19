@@ -26,6 +26,9 @@ const routes = [
     path: '/mugu',
     name: 'Mugu',
     component: () => import('../views/mugu.vue')
+    path: '/addTimetable',
+    name: 'AddTimetablePage',
+    component: () => import('../views/AddTimetable.vue')
   }
 ]
 
