@@ -4,12 +4,12 @@
       <div id="add-timetable">
         <div class="row">
           <h2>新增課表</h2>
-          <button @click="updateProfile" class="save-btn">儲存</button>
+          <button @click="saveTimetable" class="save-btn">儲存</button>
         </div>
         <div class="add-block">
           <div class="block-row">
             <span>課表名稱</span>
-            <input type="text"/>
+            <input type="text" v-model="timetableName"/>
           </div>
           <table class="show-add">
             <thead>
@@ -21,8 +21,23 @@
                 <td class="big">地點</td>
                 <td class="small">學分</td>
                 <td class="big">類別</td>
+                <td class="small">操作</td>
               </tr>
             </thead>
+            <tbody>
+              <tr v-for="(course, index) in courseList" :key="index">
+                <td class="small">{{ index + 1 }}</td>
+                <td class="big">{{ course.name }}</td>
+                <td class="big">{{ course.shortName }}</td>
+                <td class="big">{{ course.time.join(', ') }}</td>
+                <td class="big">{{ course.location }}</td>
+                <td class="small">{{ course.credits }}</td>
+                <td class="big">{{ course.category }}</td>
+                <td class="small">
+                  <button @click="removeCourse(index)" class="text-red-500 hover:text-red-700">X</button>
+                </td>
+              </tr>
+            </tbody>
           </table>
           <button @click="showForm" class="add-btn">+</button>
           <div v-if="isClicked">
@@ -41,11 +56,30 @@
                 <span :class="{'rotate-up': isPeriodsOpen}">▼</span>
               </div>
 
-              <div v-if="isPeriodsOpen" class="checkbox-group big">
-                <span v-for="period in times" :key="period" class="checkbox-item">
-                  <input type="checkbox" :id="`time-${period}`" :value="period" v-model="newCourse.time">
-                  <label :for="`time-${period}`">{{ period }}</label> 
-                </span>
+              <div v-if="isPeriodsOpen" class="time-dropdown">
+                <table class="time">
+                  <thead>
+                    <tr>
+                      <th class="empty-box"></th>
+                      <th v-for="day in weekDays" :key="day" class="weekday-th">{{ day }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(period, pIndex) in periods" :key="pIndex">
+                      <td class="period-td">{{ period }}</td>
+                      
+                      <td 
+                        v-for="(day, dIndex) in weekDays" 
+                        :key="`${dIndex}-${pIndex}`"
+                        class="time-cell"
+                        :class="{ 'selected': isSelected(dIndex, pIndex) }"
+                        @click="toggleTime(dIndex, pIndex)"
+                      >
+                        <span v-if="isSelected(dIndex, pIndex)">✓</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
             <div class="block-row">
@@ -79,6 +113,8 @@ export default {
     return{
       isClicked: false,
       isPeriodsOpen: false,
+      timetableName: '',
+      courseList: [],
       newCourse: {
         name: '',
         shortName: '',
@@ -87,18 +123,84 @@ export default {
         credits: 0,
         category: '',
       },
-      times: [
-        '101', '102', '103', '104',
-        '201', '202', '203', '204',
-      ],
+      weekDays: ['一', '二', '三', '四', '五', '六', '日'],
+      periods: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
       categories: [
-        '校必修', '系必修', '選修', '通識', '體育',
+        '校必修', '系必修', '選修', '通識', '體育', '英文畢業門檻',
       ]
     }
   },
   methods: {
     showForm(){
       this.isClicked = !this.isClicked
+    },
+    getTimeValue(day, period) {
+      return `${day+1}0${period+1}`;
+    },
+    isSelected(day, period) {
+      const val = this.getTimeValue(day, period);
+      return this.newCourse.time.includes(val);
+    },
+    toggleTime(day, period) {
+      const val = this.getTimeValue(day, period);
+      const index = this.newCourse.time.indexOf(val);
+      
+      if (index === -1) {
+        this.newCourse.time.push(val);
+      } else {
+        this.newCourse.time.splice(index, 1);
+      }
+    },
+    addNewCourse() {
+      if(!this.newCourse.name) return alert("請輸入課名");
+      //加進list
+      this.courseList.push(JSON.parse(JSON.stringify(this.newCourse)));
+      this.newCourse = {
+        name: '',
+        shortName: '',
+        time: [],
+        location: '',
+        credits: 0,
+        category: '',
+      };
+    },
+    removeCourse(index) {
+      this.courseList.splice(index, 1);
+    },
+    async saveTimetable() {
+      const token = localStorage.getItem('token');
+      if(!token) {
+        alert("請先登入!");
+        this.$router.push('/login');
+        return;
+      }
+      if(!this.timetableName) return alert("請輸入課表名稱");
+      if(this.courseList.length === 0) return alert("請新增至少一門課程");
+      try {
+        const res = await fetch('http://localhost:3000/api/timetable/addTimetable', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            timetable_name: this.timetableName,
+            courses: this.courseList
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert('課表新增成功！');
+          //跳轉到課表顯示頁面
+        } else {
+          alert('新增失敗: ' + data.message);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('系統發生錯誤');
+      }
     }
   }
 }
@@ -179,23 +281,35 @@ h2 {
   @apply transform -rotate-180;
 }
 
-/* Checkbox 群組樣式：變成一個可捲動的選單盒子 */
-.checkbox-group {
-  /* 讓 Checkbox 群組定位在 Select Header 下方 */
-  @apply absolute z-20 bg-white shadow-lg border border-gray-300 rounded mt-1 p-2 max-h-40 overflow-y-auto;
-  /* 繼承 block-row 的寬度控制 */
-  /* big 是 w-2/12，這裡可能需要根據實際佈局調整絕對寬度 */
-  width: calc(25% - 40px); /* 假設 block-row span 佔 1/12，input/select 佔 2/12，且有 mr-10 (40px) */
+.time-dropdown {
+  @apply absolute top-full left-[8.33%] z-50 mt-1 bg-white shadow-2xl border border-solid border-gray-300 rounded-lg w-auto overflow-hidden;
 }
 
-.checkbox-item {
-  @apply flex items-center w-full; /* 讓每個選項佔滿寬度 */
+.time {
+  @apply w-full border-collapse bg-white text-[10px];
 }
 
-.checkbox-item input[type="checkbox"] {
-  @apply w-auto border-none mr-1; 
+.empty-box {
+  @apply p-1 bg-gray-100 border border-gray-300;
 }
 
+.weekday-th {
+  @apply p-1 w-5 bg-gray-100 border border-gray-300 text-gray-600 font-bold;
+}
+
+.period-td {
+  @apply p-1 w-3 bg-gray-50 border border-gray-300 text-gray-500 font-bold text-center;
+}
+
+.time-cell {
+  @apply border border-gray-300 text-center align-middle h-3 w-5 cursor-pointer transition-colors duration-200;
+  @apply hover:bg-custom-skin;
+}
+
+.time-cell.selected {
+  @apply bg-custom-brown text-white;
+  @apply hover:bg-opacity-90;
+}
 
 .save-btn {
   @apply bg-custom-brown bg-opacity-100 text-white px-4 py-0 rounded my-4 hover:bg-opacity-80 transition font-contentFont;
