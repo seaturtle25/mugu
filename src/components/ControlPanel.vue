@@ -18,7 +18,7 @@
     <div class="divider"></div>
 
     <button class="diary-btn" @click="$emit('openDiary')">
-      📖 寫日記
+      📖 留言板
     </button>
   </div>
 </template>

@@ -205,8 +205,10 @@ onUnmounted(() => {
 .mugu-wrapper {
   padding: 24px;
   display: flex;
-  gap: 24px;
+  gap: 35px;
   align-items: center;
+  flex-direction: column;
+  width: fit-content;
 }
 
 .avatar {

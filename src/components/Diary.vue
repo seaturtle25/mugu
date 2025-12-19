@@ -1,7 +1,7 @@
 <template>
   <div class="diary-mask" @click.self="$emit('close')">
     <div class="diary-box">
-      <h3>☁️ 我的心情日記</h3>
+      <h3>☁️ 我的心情留言板</h3>
       <textarea v-model="text" placeholder="寫下今天的心情..."></textarea>
       <div class="controls">
         <button class="btn btn-save" @click="save">儲存</button>
@@ -29,22 +29,22 @@ onMounted(async () => {
     }
   } catch (e) {
     console.error('讀取失敗:', e)
-    alert('連線失敗！請確認後端 Server (port 3000) 有沒有開？')
+    alert('連線失敗！')
   }
 })
 
 async function save() {
   try {
     await axios.post(API_URL, { content: text.value })
-    alert('成功！日記已同步到 MongoDB 資料庫。')
+    alert('成功儲存!')
   } catch (e) {
     console.error('儲存失敗:', e)
-    alert('儲存失敗！請檢查後端連線。')
+    alert('儲存失敗！')
   }
 }
 
 async function clear() {
-  if (confirm('確定要清空雲端日記嗎？無法復原喔！')) {
+  if (confirm('確定清除嗎？無法復原喔！')) {
     try {
       text.value = ''
       await axios.post(API_URL, { content: '' })

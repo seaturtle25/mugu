@@ -67,7 +67,7 @@ async function handleChangeType(newType) {
   overflow: hidden;
   background: #fef8ff;
   display: flex;
-  gap: 40px;
+  gap: 200px;
   align-items: center;
   justify-content: center;
 }
