@@ -9,6 +9,7 @@
         <div>
           <router-link to="/mugu">MUGU</router-link>
           <router-link to="/addTimetable">新增課表</router-link>
+          <router-link to="/GraduationTable">畢業進度</router-link>
           <router-link to="/control">控制頁面</router-link>
           <button id="logout-btn" @click="logout">登出</button>
         </div>

@@ -31,6 +31,11 @@ const routes = [
     path: '/addTimetable',
     name: 'AddTimetablePage',
     component: () => import('../views/AddTimetable.vue')
+  },
+  {
+    path: '/GraduationTable',
+    name: 'GraduationTablePage',
+    component: () => import('../views/GraduationTable.vue')
   }
 ]
 

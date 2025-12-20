@@ -97,7 +97,7 @@ textarea {
 }
 
 
-textarea:focus { border-color: #7c4dff; }
+textarea:focus { border-color: #f3d7c7; }
 
 .controls {
   display: flex;
