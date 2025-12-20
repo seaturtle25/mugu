@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "ControlPage",
   data() {
@@ -43,10 +44,40 @@ export default {
       }
     }
   },
-  create() {
+  created() {
     this.loadUserProfile();
   },
   methods: {
+    async loadUserProfile(){
+      const token = localStorage.getItem('token');
+      if(!token){
+        alert("請先登入!");
+        this.$router.push('/login');
+        return;
+      }
+      
+      try {
+        const res = await axios.get('http://localhost:3000/api/auth/profile',{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        console.log("User Profile Loaded:", res.data);
+        const userData = res.data;
+        this.formData.name = userData.name;
+        this.formData.email = userData.email;
+      }catch (err) {
+        console.error("載入失敗", err);
+        
+        if (err.response && err.response.status === 401) {
+          alert('登入時效已過，請重新登入');
+          localStorage.removeItem('token'); // 清除無效 Token
+          this.$router.push('/login');
+        } else {
+          alert('無法讀取使用者資料');
+        }
+      }
+    },
     async updateProfile(){
       const token = localStorage.getItem('token');
       if(!token){
@@ -68,39 +99,40 @@ export default {
       }
 
       try {
-        const res = await fetch('http://localhost:3000/api/auth/profile',{
-          method: 'PUT',  //更新資料
+        const res = await axios.put('http://localhost:3000/api/auth/profile',
+          updateData,
+          {
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(updateData),
+          }
         });
         
-        
+        const data = res.data;
 
-        if(res.ok){
-          const data = await res.json();
-          console.log('Profile update response:', data);
-          alert('更新成功!');
-          this.$router.push('/');
-        }else{
-          const text = await res.text();
-          console.error('後端回應狀態碼:', res.status);
-          console.error('後端回應原始內容', text);
-          try {
-            const data = JSON.parse(text);
-            alert('更新失敗: ' + data.message);
-          } catch {
-            alert('更新失敗: 後端返回了非預期的 HTML 錯誤頁面，請檢查路由配置。');
-          }
-          
-        } 
+        console.log('Profile update response:', data);
+        alert('更新成功!');
+        this.$router.push('/');
       } catch(err) {
         console.error(err);
-        alert('更新發生錯誤');
-      }
+        if (err.response) {
+          
+          const status = err.response.status;
+          const msg = err.response.data.message || '更新失敗';
 
+          if (status === 401) {
+            alert('登入逾時，請重新登入');
+            this.$router.push('/login');
+          } else if (status === 400) {
+            alert('權限不足或是舊密碼錯誤'); 
+          } else {
+            alert(`錯誤: ${msg}`); 
+          }
+        } else if (err.request) {
+          alert('伺服器無回應，請檢查網路連線');
+        } else {
+          alert('發生未知錯誤');
+        }
+      }
     }
   }
 };

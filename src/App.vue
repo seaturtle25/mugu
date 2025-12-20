@@ -48,7 +48,7 @@ nav div {
 }
 
 nav a {
-  @apply text-custom-brown no-underline my-0 py-1.5;
+  @apply text-custom-brown no-underline my-0 py-1.5 px-1.5;
 }
 
 #logout-btn {

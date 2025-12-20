@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "AddTimetable", 
   data(){
@@ -177,29 +178,29 @@ export default {
       if(!this.timetableName) return alert("請輸入課表名稱");
       if(this.courseList.length === 0) return alert("請新增至少一門課程");
       try {
-        const res = await fetch('http://localhost:3000/api/timetable/addTimetable', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
+        const res = await axios.post('http://localhost:3000/api/timetable/addTimetable',{
             timetable_name: this.timetableName,
             courses: this.courseList
-          })
+        },{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         });
 
-        const data = await res.json();
+        const data = res.data;
 
-        if (res.ok) {
-          alert('課表新增成功！');
-          //跳轉到課表顯示頁面
-        } else {
-          alert('新增失敗: ' + data.message);
-        }
+        alert('課表新增成功！');
+        //跳轉到課表顯示頁面
+        console.log(data);
       } catch (err) {
         console.error(err);
-        alert('系統發生錯誤');
+        if (err.response && err.response.data) {
+          // 後端回傳的具體錯誤
+          alert('新增失敗: ' + (err.response.data.message || '未知錯誤'));
+        } else {
+          // 網路連不上或其他程式錯誤
+          alert('系統發生錯誤，請稍後再試');
+        }
       }
     }
   }
