@@ -31,6 +31,11 @@ const routes = [
     path: '/addTimetable',
     name: 'AddTimetablePage',
     component: () => import('../views/AddTimetable.vue')
+  },
+  {
+    path: '/Timetable',
+    name: 'TimetablePage',
+    component: () => import('../views/Timetable.vue')
   }
 ]
 

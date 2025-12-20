@@ -229,7 +229,7 @@ h2 {
 }
 
 .add-block {
-  @apply justify-between w-full mb-3 bg-white bg-opacity-70 rounded-lg px-4 py-4;
+  @apply justify-between w-full mb-3 bg-custom-lightSkin rounded-lg px-4 py-4;
 }
 
 .block-row {
