@@ -6,11 +6,17 @@
               <h3 class="title">🎓 畢業門檻進度</h3>
               <div class="add-block">
                 <div class="progress-list">
-                    <div v-for="item in progressData" :key="item.name" class="progress-item">
+                    <div v-for="(item, index) in progressData" :key="item.name" class="progress-item">
                         <div class="info-header">
                             <span class="category-name">{{ item.name }}</span>
                             <span class="credits-detail">
-                                {{ item.current }} / {{ item.total }} 學分
+                                已完成 {{ item.current }} / 
+                                <input 
+                                    type="number" 
+                                    v-model.number="rawData[index].total"
+                                    class="total-input"
+                                /> 
+                                總學分
                             </span>
                         </div>
                         <div class ="chart-group">
@@ -46,23 +52,84 @@
 </template>
 
 <script setup>
-    import { ref, computed }  from 'vue';
+    import { ref, computed, onMounted ,watch}  from 'vue';
+    import axios from 'axios';
 
     const rawData = ref([
         { name: '校必修', current: 0, total: 20 },
-        { name: '系必修', current: 15, total: 40 },
-        { name: '選修', current: 9, total: 30 },
-        { name: '通識', current: 10, total: 20 },
-        { name: '體育', current: 7, total: 8 },
-        { name: '英文/多益', current: 6, total: 6 }
+        { name: '系必修', current: 0, total: 40 },
+        { name: '選修', current: 0, total: 30 },
+        { name: '通識', current: 0, total: 20 },
+        { name: '體育', current: 0, total: 8 },
+        { name: '英文/多益', current: 0, total: 6 }
     ]);
 
     const progressData = computed(() => {
         return rawData.value.map(item => {
-            let percent = Math.floor((item.current / item.total) * 100)
+            let percent = 0;
+            if (item.total > 0){
+              percent = Math.floor((item.current / item.total) * 100)
+            }
             if (percent > 100) percent = 100
             return { ...item, percentage: percent }
         })
+    });
+
+    const API_URL = 'http://localhost:3000/api/graduationtable';
+    const fetchData = async () => {
+        try{
+            const token = localStorage.getItem('token');
+            console.log("正在抓取資料...");
+            const response = await axios.get(API_URL, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            console.log("後端回傳:", response.data);
+            const { timetables, userRules } = response.data;
+            if (userRules && userRules.length > 0) {
+                rawData.value.forEach(localItem => {
+                    const savedRule = userRules.find(r => r.name === localItem.name);
+                    if (savedRule) {
+                        localItem.total = savedRule.total;
+                    }
+                });
+            }
+            let allcourses = [];
+            if(timetables){
+              timetables.forEach(t => {
+                allcourses.push(...t.courses);
+              })
+            }
+            rawData.value.forEach(localItem => {
+                const matchedCourses = allcourses.filter(course => course.category === localItem.name);
+                localItem.current = matchedCourses.reduce((sum, course) => sum + (course.credits || 0), 0);
+            })
+        } catch (error) {
+            console.error('Error fetching graduation data:', error);
+        }
+    };
+
+    let timeout = null;
+    watch(rawData, (newVal) => {
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
+                const rulesToSave = newVal.map(item => ({ name: item.name, total: item.total }));
+                
+                await axios.post(API_URL,
+                    { rules: rulesToSave },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                console.log("設定已儲存");
+            } catch (err) {
+                console.error("儲存失敗", err);
+            }
+        }, 1000);
+    }, { deep: true });
+
+    onMounted(() => {
+        fetchData();
     });
 
     function getParams(item) {
@@ -219,6 +286,28 @@
   font-size: 0.8rem;
   font-weight: bold;
   color: #5a3825;
+}
+
+.total-input {
+    width: 50px;
+    border: none;
+    border-bottom: 1px dashed #aaa;
+    background: transparent;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: bold;
+    outline: none;
+}
+.total-input:focus {
+    border-bottom: 2px solid #5a3825;
+    background: rgba(255,255,255,0.5);
+}
+
+.total-input::-webkit-outer-spin-button,
+.total-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .bg-normal { background-color: 	#D94600; opacity: 0.8; }
