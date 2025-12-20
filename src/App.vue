@@ -25,14 +25,25 @@ export default {
   name: "App", 
   data(){
     return{
-      isLoggedIn: localStorage.getItem("token") !== null,
+      isLoggedIn: false, 
     }
   },
+  watch: {
+    $route() {
+      this.checkLoginStatus();
+    }
+  },
+  created() {
+    this.checkLoginStatus();
+  },
   methods: {
+    checkLoginStatus() {
+      this.isLoggedIn = localStorage.getItem("token") !== null;
+    },
     logout() {
-      localStorage.removeItem("token")
-      this.isLoggedIn = false
-      this.$router.push("/")
+      localStorage.removeItem("token");
+      this.isLoggedIn = false;
+      this.$router.push("/"); 
     }
   }
 }
