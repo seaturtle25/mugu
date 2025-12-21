@@ -37,7 +37,11 @@ const showDiary = ref(false)
 
 onMounted(async () => {
   try {
-    const res = await axios.get(API_STATE_URL)
+    const res = await axios.get(API_STATE_URL,{
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     if (res.data && res.data.currentType) {
       avatarType.value = res.data.currentType
       console.log('已從資料庫讀取 Mugu 狀態:', avatarType.value)
@@ -54,7 +58,11 @@ function handlePoke() {
 async function handleChangeType(newType) {
   avatarType.value = newType
   try {
-    await axios.post(API_STATE_URL, { currentType: newType })
+    await axios.post(API_STATE_URL, { currentType: newType },{
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     console.log('狀態已同步到資料庫:', newType)
   } catch (e) {
     console.error('狀態同步失敗:', e)
