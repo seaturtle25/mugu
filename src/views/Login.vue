@@ -48,7 +48,7 @@ export default {
         this.$root.isLoggedIn = true;
         this.$router.push('/');
       } catch(err) {
-        cconsole.error(err);
+        console.error(err);
         if (err.response && err.response.data) {
           // 後端回傳的具體錯誤
           alert('登入失敗: ' + (err.response.data.message || '未知錯誤'));
