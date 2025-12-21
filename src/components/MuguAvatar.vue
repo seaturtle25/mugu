@@ -53,8 +53,23 @@ function onClick() {
   triggerAnim('dodge')
 }
 
+// 新增一個重置函式
+function resetAvatar() {
+  // 立即移除所有動畫效果，強制回到原點
+  anime.remove(avatarRef.value) 
+  anime.set(avatarRef.value, {
+    translateX: 0,
+    translateY: 0,
+    scale: 1,
+    rotate: 0,
+    scaleX: 1,
+    scaleY: 1
+  })
+}
+
 function triggerAnim(name) {
   stopCurrent()
+  resetAvatar()
   if (name === 'dodge') dodge()
   else if (name === 'shake') shakeHead()
   else if (name === 'jelly') jelly()
@@ -182,6 +197,7 @@ async function fall() {
     translateY: 30,
     duration: 700,
     easing: 'easeInOutCubic',
+    direction: 'alternate',
   })
   return currentAnim.finished
 }
@@ -193,7 +209,8 @@ async function roll() {
     rotate: 720,
     translateX: 200,
     duration: 1000,
-    easing: 'easeOutQuart'
+    easing: 'easeOutQuart',
+    direction: 'alternate',
   })
   return currentAnim.finished
 }
