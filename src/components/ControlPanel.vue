@@ -17,9 +17,7 @@
 
     <div class="divider"></div>
 
-    <button class="diary-btn" @click="$emit('openDiary')">
-      📖 寫日記
-    </button>
+    <button class="diary-btn" @click="$emit('openDiary')">留言板</button>
   </div>
 </template>
 
@@ -74,15 +72,15 @@ h3 { margin: 0; color: #444; font-size: 1.1rem; text-align: center; }
 }
 
 .grid-item:hover { 
-  background: #eef6ff; 
+  background: #f7f0e6; 
   transform: translateY(-2px);
 }
 
 .grid-item.active {
-  border-color: #5b9cff;
-  background: #eef6ff;
+  border-color: #f7f0e6;
+  background: #f7f0e6;
   transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(91, 156, 255, 0.3);
+  box-shadow: 0 2px 5px #f3d7c7;
 }
 
 .emoji { font-size: 24px; margin-bottom: 4px; }
@@ -93,8 +91,8 @@ h3 { margin: 0; color: #444; font-size: 1.1rem; text-align: center; }
 .diary-btn {
   width: 100%;
   padding: 12px;
-  background: #7c4dff;
-  color: white;
+  background: #f7f0e6;
+  color: #310d00;
   border: none;
   border-radius: 10px;
   font-size: 14px;
@@ -102,6 +100,6 @@ h3 { margin: 0; color: #444; font-size: 1.1rem; text-align: center; }
   cursor: pointer;
   transition: background 0.2s;
 }
-.diary-btn:hover { background: #651fff; }
+.diary-btn:hover { background: #f3d7c7; }
 .diary-btn:active { transform: scale(0.98); }
 </style>

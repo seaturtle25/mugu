@@ -1,22 +1,24 @@
 <template>
-  <div class="mugu-container">
-    <MuguAvatar 
-      :type="avatarType"
-      @poke="handlePoke"
-    />
+  <div class="contain">
+    <div class="mugu-container">
+      <MuguAvatar 
+        :type="avatarType"
+        @poke="handlePoke"
+      />
 
-    <ControlPanel
-      :currentType="avatarType"
-      @changeType="handleChangeType"
-      @openDiary="showDiary = true"
-    />
+      <ControlPanel
+        :currentType="avatarType"
+        @changeType="handleChangeType"
+        @openDiary="showDiary = true"
+      />
 
-    <AudioPlayer ref="audioPlayer" />
+      <AudioPlayer ref="audioPlayer" />
 
-    <Diary 
-      v-if="showDiary"
-      @close="showDiary = false"
-    />
+      <Diary 
+        v-if="showDiary"
+        @close="showDiary = false"
+      />
+    </div>
   </div>
 </template>
 
@@ -61,13 +63,16 @@ async function handleChangeType(newType) {
 </script>
 
 <style>
+.contain {
+  @apply relative bg-[url(@/assets/Background.png)] min-h-screen bg-cover bg-center bg-no-repeat;
+}
+
 .mugu-container {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: #fef8ff;
   display: flex;
-  gap: 40px;
+  gap: 200px;
   align-items: center;
   justify-content: center;
 }
