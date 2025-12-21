@@ -36,7 +36,8 @@ const routes = [
     path: '/GraduationTable',
     name: 'GraduationTablePage',
     component: () => import('../views/GraduationTable.vue')
-  }
+  },
+  {
     path: '/Timetable',
     name: 'TimetablePage',
     component: () => import('../views/Timetable.vue')

@@ -1,13 +1,15 @@
 <template>
   <div class="mugu-wrapper">
-    <img
-      ref="avatarRef"
-      class="avatar"
-      :src="imageSrc"
-      alt="Mugu avatar"
-      @click="onClick"
-      draggable="false"
-    />
+    <div class="avatar-container">
+      <img
+        ref="avatarRef"
+        class="avatar"
+        :src="imageSrc"
+        alt="Mugu avatar"
+        @click="onClick"
+        draggable="false"
+      />
+    </div>
     <!--測試按鈕-->
     <div class="controls">
       <div class="btn-group">
