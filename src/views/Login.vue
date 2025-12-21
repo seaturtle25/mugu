@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "LoginPage",
   data() {
@@ -32,33 +33,29 @@ export default {
     async submit() {
       console.log(this.formData);
       try {
-        const res = await fetch('http://localhost:3000/api/auth/login',{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: this.formData.username,
-            password: this.formData.passwd,
-          }),
+        const res = await axios.post('http://localhost:3000/api/auth/login',{
+          username: this.formData.username,
+          password: this.formData.passwd
         });
         
-        const data = await res.json();
+        const data = res.data;
 
-        if(res.ok){
-          alert('登入成功!');
-          console.log('JWT token:', data.token);
-          console.log('Username:', data.username);
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('username', data.username);
-          this.$root.isLoggedIn = true;
-          this.$router.push('/');
-        }else{
-          alert('登入失敗: ' + data.message);
-        } 
+        alert('登入成功!');
+        console.log('JWT token:', data.token);
+        console.log('Username:', data.username);
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+        this.$root.isLoggedIn = true;
+        this.$router.push('/');
       } catch(err) {
-        console.error(err);
-        alert('登入發生錯誤');
+        cconsole.error(err);
+        if (err.response && err.response.data) {
+          // 後端回傳的具體錯誤
+          alert('登入失敗: ' + (err.response.data.message || '未知錯誤'));
+        } else {
+          // 網路連不上或其他程式錯誤
+          alert('系統發生錯誤，請稍後再試');
+        }
       }
     }
   },

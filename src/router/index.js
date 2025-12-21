@@ -37,6 +37,10 @@ const routes = [
     name: 'GraduationTablePage',
     component: () => import('../views/GraduationTable.vue')
   }
+    path: '/Timetable',
+    name: 'TimetablePage',
+    component: () => import('../views/Timetable.vue')
+  }
 ]
 
 const router = createRouter({

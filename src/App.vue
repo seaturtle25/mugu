@@ -10,6 +10,7 @@
           <router-link to="/mugu">MUGU</router-link>
           <router-link to="/addTimetable">新增課表</router-link>
           <router-link to="/GraduationTable">畢業進度</router-link>
+          <router-link to="/Timetable">課表</router-link>
           <router-link to="/control">控制頁面</router-link>
           <button id="logout-btn" @click="logout">登出</button>
         </div>
@@ -26,14 +27,25 @@ export default {
   name: "App", 
   data(){
     return{
-      isLoggedIn: localStorage.getItem("token") !== null,
+      isLoggedIn: false, 
     }
   },
+  watch: {
+    $route() {
+      this.checkLoginStatus();
+    }
+  },
+  created() {
+    this.checkLoginStatus();
+  },
   methods: {
+    checkLoginStatus() {
+      this.isLoggedIn = localStorage.getItem("token") !== null;
+    },
     logout() {
-      localStorage.removeItem("token")
-      this.isLoggedIn = false
-      this.$router.push("/")
+      localStorage.removeItem("token");
+      this.isLoggedIn = false;
+      this.$router.push("/"); 
     }
   }
 }
@@ -49,7 +61,7 @@ nav div {
 }
 
 nav a {
-  @apply text-custom-brown no-underline my-0 py-1.5;
+  @apply text-custom-brown no-underline my-0 py-1.5 px-1.5;
 }
 
 #logout-btn {

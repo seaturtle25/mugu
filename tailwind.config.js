@@ -5,8 +5,9 @@ module.exports = {
     extend: {
       colors: {
         'custom-brown': '#310d00',
+        'custom-lightBrown': '#5a3d33',
         'custom-skin': '#f3d7c7',
-        'custom-lightSkin': '#f7f0e6'
+        'custom-lightSkin': '#fbf3ee'
       },
       fontFamily: {
         titleFont: ['MarukoTC-Medium'],
