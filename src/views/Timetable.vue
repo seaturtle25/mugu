@@ -186,7 +186,7 @@ export default {
 }
 
 .time-cell {
-  @apply border border-custom-lightBrown border-solid rounded-md text-center align-middle h-3 w-5 cursor-pointer transition-colors duration-200;
+  @apply border border-custom-lightBrown border-solid rounded-md text-center align-middle h-3 w-5 transition-colors duration-200;
 }
 
 .location {
