@@ -8,7 +8,6 @@
         <router-link to="/">MUGU-你的學分精算師</router-link>
         <div>
           <router-link to="/mugu">MUGU</router-link>
-          <router-link to="/addTimetable">新增課表</router-link>
           <router-link to="/GraduationTable">畢業進度</router-link>
           <router-link to="/Timetable">課表</router-link>
           <router-link to="/control">控制頁面</router-link>

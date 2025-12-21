@@ -33,7 +33,7 @@ export default {
     async submit() {
       console.log(this.formData);
       try {
-        const res = await axios.post('http://localhost:3000/api/auth/login',{
+        const res = await axios.post(`${import.meta.env.VUE_APP_API_URL}/api/auth/login`,{
           username: this.formData.username,
           password: this.formData.passwd
         });

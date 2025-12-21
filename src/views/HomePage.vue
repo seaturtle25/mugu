@@ -147,7 +147,7 @@ export default {
       }
       
       try {
-        const res = await axios.get('http://localhost:3000/api/timetable/user',{
+        const res = await axios.get(`${import.meta.env.VUE_APP_API_URL}/api/timetable/user`,{
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -170,7 +170,7 @@ export default {
       }
       
       try {
-        const res = await axios.get(`http://localhost:3000/api/timetable/timetable/${timetableId}`,{
+        const res = await axios.get(`${import.meta.env.VUE_APP_API_URL}/api/timetable/timetable/${timetableId}`,{
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -200,7 +200,7 @@ export default {
         return;
       }
       try {
-        const res = await axios.get('http://localhost:3000/api/todo', {
+        const res = await axios.get(`${import.meta.env.VUE_APP_API_URL}/api/todo`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         this.todos = res.data;
@@ -213,7 +213,7 @@ export default {
       const token = localStorage.getItem('token');
 
       try {
-        const res = await axios.post('http://localhost:3000/api/todo', 
+        const res = await axios.post(`${import.meta.env.VUE_APP_API_URL}/api/todo`, 
           { content: this.newTodo.content,  
             deadline: this.newTodo.deadline },
           { headers: { 'Authorization': `Bearer ${token}` }}
@@ -230,7 +230,7 @@ export default {
     async removeTodo(todoId) {
       const token = localStorage.getItem('token');
       try {
-        await axios.delete(`http://localhost:3000/api/todo/${todoId}`, {
+        await axios.delete(`${import.meta.env.VUE_APP_API_URL}/api/todo/${todoId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
@@ -243,7 +243,7 @@ export default {
     async toggleTodo(todo) {
       const token = localStorage.getItem('token');
       try {
-        await axios.put(`http://localhost:3000/api/todo/${todo._id}`, {}, {
+        await axios.put(`${import.meta.env.VUE_APP_API_URL}/api/todo/${todo._id}`, {}, {
            headers: { 'Authorization': `Bearer ${token}` }
         });
       } catch (err) {
