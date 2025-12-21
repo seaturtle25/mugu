@@ -266,36 +266,37 @@ export default {
 
 <style scoped>
 .contain {
-  @apply flex-1 bg-[url(@/assets/Background.png)] min-h-screen bg-cover bg-center bg-no-repeat;
+  @apply flex-1 bg-[url(@/assets/Background.png)] min-h-screen bg-cover bg-center bg-no-repeat bg-fixed;
 }
 
 .contain-in {
-  @apply relative z-10 flex flex-col items-center justify-center min-h-screen;
+  @apply relative z-10 flex flex-col items-center justify-center min-h-screen w-full;
 }
 
-.before{
-  @apply flex flex-col items-center mx-auto pt-32;
+.before {
+  @apply flex flex-col items-center mx-auto pt-32 px-4 text-center;
 }
 
-.after{
- @apply relative z-10 flex flex-row items-center w-3/5 px-8 py-4 mt-10 font-contentFont;
+.after {
+  /* lg: 大螢幕 */
+  @apply relative z-10 flex flex-col w-11/12 px-2 py-4 mt-10 font-contentFont mx-auto gap-8
+         lg:flex-row lg:w-4/5 lg:px-8 lg:gap-0 xl:w-3/5;
 }
 
 h1 {
-  @apply text-custom-brown font-titleFont;
+  @apply text-custom-brown font-titleFont text-2xl md:text-4xl mb-4;
 }
 
-#mugu-img{
-  @apply w-60;
+#mugu-img {
+  @apply w-40 md:w-60;
 }
 
 .sign-log-btn {
-  @apply bg-custom-brown bg-opacity-100 text-white px-4 py-2 rounded mx-2 hover:bg-opacity-80 transition font-contentFont;
+  @apply bg-custom-brown bg-opacity-100 text-white px-4 py-2 rounded mx-2 hover:bg-opacity-80 transition font-contentFont text-sm md:text-base;
 }
 
-
 .timetable-section {
-  @apply w-[35%] flex flex-col; 
+  @apply w-full lg:w-[35%] flex flex-col;
 }
 
 .section-header {
@@ -307,7 +308,7 @@ h1 {
 }
 
 .section-header select {
-  @apply border border-gray-300 rounded px-2 py-1 text-sm text-gray-700 bg-white;
+  @apply border border-gray-300 rounded px-2 py-1 text-sm text-gray-700 bg-white max-w-[150px];
 }
 
 .time-table {
@@ -315,7 +316,7 @@ h1 {
 }
 
 .period-td {
-  @apply w-10 h-10 bg-custom-skin bg-opacity-50 rounded-md text-custom-brown text-center text-base;
+  @apply w-10 h-10 bg-custom-skin bg-opacity-50 rounded-md text-custom-brown text-center text-base shrink-0;
 }
 
 .time-cell {
@@ -334,14 +335,13 @@ h1 {
   @apply text-center text-gray-400 py-4 bg-gray-50 rounded-lg border border-dashed border-gray-300;
 }
 
-
-/*備忘錄區塊*/
 .todo-section {
-  @apply flex flex-col ml-16 p-5 min-h-[400px] bg-custom-skin bg-opacity-50 rounded-lg;
+  @apply flex flex-col p-5 min-h-[400px] bg-custom-skin bg-opacity-50 rounded-lg w-full
+         lg:ml-10 lg:mt-0 lg:flex-1;
 }
 
 .todo-input {
-  @apply flex flex-row gap-2 mb-6 bg-custom-lightSkin p-4 rounded-lg;
+  @apply flex flex-col gap-2 mb-6 bg-custom-lightSkin p-4 rounded-lg sm:flex-row;
 }
 
 .input-text {
@@ -349,41 +349,39 @@ h1 {
 }
 
 .input-date {
-  @apply flex-1 border border-gray-300 rounded px-3 py-1 text-sm text-gray-600;
+  @apply w-full border border-gray-300 rounded px-3 py-1 text-sm text-gray-600 sm:w-auto sm:flex-1;
 }
 
 .add-btn {
-  @apply bg-custom-brown text-white w-12 rounded flex items-center justify-center text-xl hover:opacity-90;
+  @apply bg-custom-brown text-white w-full rounded flex items-center justify-center text-xl hover:opacity-90 py-2 sm:w-12 sm:py-0;
 }
 
-
 .todo-list {
-  @apply grid grid-cols-3 gap-2 auto-rows-min mx-1; 
+  @apply grid grid-cols-1 gap-3 auto-rows-min mx-1 sm:grid-cols-2 xl:grid-cols-3;
 }
 
 .todo-cards {
-  @apply list-disc flex items-center;
+  @apply flex flex-col bg-white/60 rounded-md p-2 shadow-sm transition hover:shadow-md sm:bg-transparent sm:shadow-none sm:p-0;
 }
 
 .todo-content {
-  @apply flex flex-col h-full;
+  @apply flex flex-col h-full w-full;
 }
 
 .content-main {
-  @apply flex items-start;
+  @apply flex items-start justify-between w-full;
 }
 
-/*
-.todo-checkbox {
-  @apply mt-1 mr-2 cursor-pointer;
+.content-main span {
+  @apply break-all pr-2; 
 }
-*/
+
 .todo-date {
-  @apply text-xs text-custom-brown mb-1 font-bold flex items-center;
+  @apply text-xs text-custom-brown mt-2 font-bold flex items-center sm:mt-0 sm:mb-1;
 }
 
 .delete-btn {
-  @apply bg-white text-custom-brown w-3 h-3 rounded flex items-center justify-center text-xs ml-4 m-1.5 p-1.5 text-center border-solid border border-custom-brown hover:opacity-90;
+  @apply bg-white text-custom-brown w-5 h-5 rounded flex items-center justify-center text-xs ml-auto border-solid border border-custom-brown hover:opacity-90 shrink-0 sm:w-3 sm:h-3 sm:ml-4 sm:m-1.5 sm:p-1.5;
 }
 
 .empty-todo {
