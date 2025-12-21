@@ -9,7 +9,7 @@
         </div>
         <div class="form-row">
           <span>密碼</span>
-          <input type="password" v-model="formData.passwd" />
+          <input type="password" v-model="formData.password" />
         </div>
         <button @click="submit" class="submit-btn">送出</button>
       </div>
@@ -25,7 +25,7 @@ export default {
     return {
       formData: {
         username: '', 
-        passwd: ''
+        password: ''
       },
     };
   },
@@ -33,9 +33,9 @@ export default {
     async submit() {
       console.log(this.formData);
       try {
-        const res = await axios.post(`${import.meta.env.VUE_APP_API_URL}/api/auth/login`,{
+        const res = await axios.post(`${process.env.VUE_APP_API_URL}/api/auth/login`,{
           username: this.formData.username,
-          password: this.formData.passwd
+          password: this.formData.password
         });
         
         const data = res.data;

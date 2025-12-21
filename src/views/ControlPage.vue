@@ -57,7 +57,7 @@ export default {
       }
       
       try {
-        const res = await axios.get(`${import.meta.env.VUE_APP_API_URL}/api/auth/profile`,{
+        const res = await axios.get(`${process.env.VUE_APP_API_URL}/api/auth/profile`,{
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -99,7 +99,7 @@ export default {
       }
 
       try {
-        const res = await axios.put(`${import.meta.env.VUE_APP_API_URL}/api/auth/profile`,
+        const res = await axios.put(`${process.env.VUE_APP_API_URL}/api/auth/profile`,
           updateData,
           {
           headers: {

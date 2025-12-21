@@ -30,7 +30,7 @@ import ControlPanel from '../components/ControlPanel.vue'
 import Diary from '../components/Diary.vue'
 import AudioPlayer from '../components/AudioPlayer.vue'
 
-const API_STATE_URL = `${import.meta.env.VUE_APP_API_URL}/api/mugu/state`
+const API_STATE_URL = `${process.env.VUE_APP_API_URL}/api/mugu/state`
 
 const avatarType = ref('default')
 const showDiary = ref(false)

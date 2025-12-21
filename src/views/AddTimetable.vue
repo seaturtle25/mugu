@@ -178,7 +178,7 @@ export default {
       if(!this.timetableName) return alert("請輸入課表名稱");
       if(this.courseList.length === 0) return alert("請新增至少一門課程");
       try {
-        const res = await axios.post(`${import.meta.env.VUE_APP_API_URL}/api/timetable/addTimetable`,{
+        const res = await axios.post(`${process.env.VUE_APP_API_URL}/api/timetable/addTimetable`,{
             timetable_name: this.timetableName,
             courses: this.courseList
         },{

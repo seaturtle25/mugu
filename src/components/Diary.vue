@@ -16,7 +16,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-const API_URL = `${import.meta.env.VUE_APP_API_URL}/api/mugu/diary`
+const API_URL = `${process.env.VUE_APP_API_URL}/api/mugu/diary`
 const text = ref('')
 
 defineEmits(['close'])
