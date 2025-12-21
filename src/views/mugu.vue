@@ -89,14 +89,12 @@ async function handleChangeType(newType) {
   align-items: center;
   justify-content: center;
 }
-
 .spacer {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 200px;
 }
-
 @media screen and (max-width: 600px) {
   .mugu-container {
     margin-top: 120px;
