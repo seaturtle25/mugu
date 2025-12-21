@@ -75,7 +75,7 @@ export default {
       }
       
       try {
-        const res = await axios.get('http://localhost:3000/api/timetable/user',{
+        const res = await axios.get(`${process.env.VUE_APP_API_URL}/api/timetable/user`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -98,7 +98,7 @@ export default {
       }
       
       try {
-        const res = await axios.get(`http://localhost:3000/api/timetable/timetable/${timetableId}`,{
+        const res = await axios.get(`${process.env.VUE_APP_API_URL}/api/timetable/timetable/${timetableId}`,{
           headers: {
             'Authorization': `Bearer ${token}`
           }

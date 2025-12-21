@@ -16,14 +16,20 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3000/api/mugu/diary'
+const API_URL = `${process.env.VUE_APP_API_URL}/api/mugu/diary`
 const text = ref('')
 
 defineEmits(['close'])
 
+const token = localStorage.getItem('token');
+
 onMounted(async () => {
   try {
-    const res = await axios.get(API_URL)
+    const res = await axios.get(API_URL ,{
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     if (res.data && res.data.content) {
       text.value = res.data.content
     }
@@ -35,7 +41,11 @@ onMounted(async () => {
 
 async function save() {
   try {
-    await axios.post(API_URL, { content: text.value })
+    await axios.post(API_URL, { content: text.value },{
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     alert('成功儲存!')
   } catch (e) {
     console.error('儲存失敗:', e)
@@ -47,7 +57,11 @@ async function clear() {
   if (confirm('確定清除嗎？無法復原喔！')) {
     try {
       text.value = ''
-      await axios.post(API_URL, { content: '' })
+      await axios.post(API_URL, { content: '' },{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
     } catch (e) {
       alert('清除失敗')
     }

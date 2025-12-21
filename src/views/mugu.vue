@@ -32,14 +32,21 @@ import ControlPanel from '../components/ControlPanel.vue'
 import Diary from '../components/Diary.vue'
 import AudioPlayer from '../components/AudioPlayer.vue'
 
-const API_STATE_URL = 'http://localhost:3000/api/mugu/state'
+const API_STATE_URL = `${process.env.VUE_APP_API_URL}/api/mugu/state`
 
 const avatarType = ref('default')
 const showDiary = ref(false)
 
+const token = localStorage.getItem('token');
+
 onMounted(async () => {
+  if(!token) return;
   try {
-    const res = await axios.get(API_STATE_URL)
+    const res = await axios.get(API_STATE_URL,{
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     if (res.data && res.data.currentType) {
       avatarType.value = res.data.currentType
       console.log('已從資料庫讀取 Mugu 狀態:', avatarType.value)
@@ -56,7 +63,11 @@ function handlePoke() {
 async function handleChangeType(newType) {
   avatarType.value = newType
   try {
-    await axios.post(API_STATE_URL, { currentType: newType })
+    await axios.post(API_STATE_URL, { currentType: newType },{
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     console.log('狀態已同步到資料庫:', newType)
   } catch (e) {
     console.error('狀態同步失敗:', e)
@@ -88,7 +99,6 @@ async function handleChangeType(newType) {
   .mugu-container {
     margin-top: 120px;
   }
-
   .spacer {
     display: flex;
     flex-direction: column;
@@ -96,5 +106,4 @@ async function handleChangeType(newType) {
     gap: 20px;
   }
 }
-
 </style>

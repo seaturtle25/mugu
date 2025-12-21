@@ -75,7 +75,7 @@
         })
     });
 
-    const API_URL = 'http://localhost:3000/api/graduationtable';
+    const API_URL = `${process.env.VUE_APP_API_URL}/api/graduationtable`;
     const fetchData = async () => {
         try{
             const token = localStorage.getItem('token');
