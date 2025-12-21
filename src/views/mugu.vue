@@ -35,7 +35,10 @@ const API_STATE_URL = `${process.env.VUE_APP_API_URL}/api/mugu/state`
 const avatarType = ref('default')
 const showDiary = ref(false)
 
+const token = localStorage.getItem('token');
+
 onMounted(async () => {
+  if(!token) return;
   try {
     const res = await axios.get(API_STATE_URL,{
       headers: {
