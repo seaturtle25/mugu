@@ -61,13 +61,6 @@
             <li v-for="todo in todos" :key="todo._id" class="todo-cards">
               <div class="todo-content">
                 <div class="content-main">
-                  <!--
-                  <input
-                    type="checkbox"
-                    v-model="todo.isDone"
-                    @change="toggleTodo(todo)"
-                    class="todo-checkbox">-->
-                  
                   <span>{{ todo.content }}</span>
                   <button @click="removeTodo(todo._id)" class="delete-btn">×</button>
                 </div>
@@ -247,18 +240,7 @@ export default {
       } catch (err) {
         alert("刪除失敗");
       }
-    },/*
-    async toggleTodo(todo) {
-      const token = localStorage.getItem('token');
-      try {
-        await axios.put(`${process.env.VUE_APP_API_URL}/api/todo/${todo._id}`, {}, {
-           headers: { 'Authorization': `Bearer ${token}` }
-        });
-      } catch (err) {
-        todo.isDone = !todo.isDone; //失敗的話勾回去
-        alert("更新失敗");
-      }
-    },*/
+    },
     formatTime(dateString) {
         if(!dateString) return '';
         const date = new Date(dateString);
