@@ -336,7 +336,7 @@ h1 {
 }
 
 .todo-section {
-  @apply flex flex-col p-5 min-h-[400px] bg-custom-skin bg-opacity-50 rounded-lg w-full
+  @apply flex flex-col p-5 min-h-[400px] bg-custom-skin bg-opacity-50 rounded-lg w-11/12
          lg:ml-10 lg:mt-0 lg:flex-1;
 }
 
@@ -345,11 +345,11 @@ h1 {
 }
 
 .input-text {
-  @apply w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-custom-brown;
+  @apply w-full border border-gray-300 rounded py-2 focus:outline-none focus:border-custom-brown;
 }
 
 .input-date {
-  @apply w-full border border-gray-300 rounded px-3 py-1 text-sm text-gray-600 sm:w-auto sm:flex-1;
+  @apply w-full border border-gray-300 rounded py-1 text-sm text-gray-600 sm:w-auto sm:flex-1;
 }
 
 .add-btn {
