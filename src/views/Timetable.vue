@@ -11,7 +11,13 @@
               </option>
             </select>
           </div>
-          <router-link to="/addTimetable">新增課表</router-link>
+          <div class="action-buttons">
+            <div v-if="current_timetable">
+              <button @click="deleteTimetable" class="del-btn">刪除</button>
+              <button @click="editTimetable" class="edit-btn">編輯</button>
+            </div>
+            <button @click="addTimetable" class="add-btn">新增</button>
+          </div>
         </div>
         <div class="show-block">
           <table class="time">
@@ -131,6 +137,43 @@ export default {
       } else {
         alert('讀取資料失敗');
       }
+    },
+    editTimetable(){
+      if(!this.current_timetable) return;
+      this.$router.push({ 
+        path: '/addTimetable', 
+        query: { id: this.current_timetable } 
+      });
+    },
+    async deleteTimetable(){
+      if(!this.current_timetable) return;
+      if(!confirm("確定要刪除此課表嗎？")) return;
+      
+      const token = localStorage.getItem('token');
+      if(!token){
+        alert("請先登入!");
+        this.$router.push('/login');
+        return;
+      }
+      
+      try{
+        await axios.delete(`${process.env.VUE_APP_API_URL}/api/timetable/timetable/${this.current_timetable}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        alert("刪除成功");
+        this.current_timetable = null;
+        this.currentCourses = [];
+        await this.loadTimetableList();
+      } catch (err) {
+        console.error(err);
+        alert("刪除失敗，請稍後再試");
+      }
+    },
+    addTimetable(){
+      this.$router.push('/addTimetable');
     }
   }
 }
@@ -161,10 +204,6 @@ export default {
   @apply border-b border-t-0 border-r-0 border-l-0 rounded-sm px-2 py-1 bg-white bg-opacity-0 border-black mr-10;
 }
 
-.row a {
-  @apply bg-custom-brown bg-opacity-100 text-white rounded hover:bg-opacity-80 transition font-contentFont text-xs no-underline py-1 px-2;
-}
-
 .show-block {
   @apply justify-between w-full bg-custom-lightSkin rounded-lg px-4 py-4;
 }
@@ -191,5 +230,25 @@ export default {
 
 .location {
   @apply text-xs pt-0.5;
+}
+
+.action-buttons {
+  @apply flex gap-2;
+}
+
+.action-buttons div{
+  @apply flex gap-2;
+}
+
+.add-btn {
+  @apply bg-custom-brown bg-opacity-100 text-white rounded hover:bg-opacity-80 transition font-contentFont text-xs no-underline py-1 px-2 h-fit self-center;
+}
+
+.edit-btn {
+  @apply bg-custom-brown text-white rounded hover:bg-opacity-80 transition font-contentFont text-xs py-1 px-2 h-fit self-center;
+}
+
+.del-btn {
+  @apply bg-custom-brown text-white rounded hover:bg-red-800 transition font-contentFont text-xs py-1 px-2 h-fit self-center;
 }
 </style>
