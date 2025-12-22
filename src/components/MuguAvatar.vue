@@ -18,6 +18,7 @@
         <button @click="triggerAnim('jelly')">抖動</button>
         <button @click="triggerAnim('fall')">撲倒</button>
         <button @click="triggerAnim('roll')">滾動</button>
+        <button @click="triggerAnim('fly')">飛走</button>
       </div>
     </div>
   </div>
@@ -75,6 +76,7 @@ function triggerAnim(name) {
   else if (name === 'jelly') jelly()
   else if (name === 'fall') fall()
   else if (name === 'roll') roll()
+  else if (name === 'fly') fly()
 }
 
 function stopCurrent() {
@@ -211,6 +213,47 @@ async function roll() {
     duration: 1000,
     easing: 'easeOutQuart',
     direction: 'alternate',
+  })
+  return currentAnim.finished
+}
+
+async function fly() {
+  stopCurrent()
+  currentAnim = anime({
+    targets: avatarRef.value,
+    translateX: {
+      value: 500,
+      duration: 800,
+      easing: 'linear'
+    },
+    translateY: {
+      value: -300,
+      duration: 800,
+      easing: 'easeInQuad'
+    },
+    rotate: {
+      value: 720,
+      duration: 800,
+      easing: 'linear'
+    },
+    scale: {
+      value: 0,
+      duration: 800,
+      easing: 'easeInQuad'
+    },
+    opacity: {
+        value: 0,
+        duration: 800,
+        easing: 'linear'
+    }
+  })
+  await currentAnim.finished
+  anime.set(avatarRef.value, { 
+      translateX: 0, 
+      translateY: 0, 
+      rotate: 0, 
+      scale: 1, 
+      opacity: 1
   })
   return currentAnim.finished
 }
