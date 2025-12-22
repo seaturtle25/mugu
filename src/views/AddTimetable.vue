@@ -303,7 +303,7 @@ h2 {
 }
 
 .time-cell {
-  @apply border border-gray-300 text-center align-middle h-3 w-5 cursor-pointer transition-colors duration-200;
+  @apply border border-gray-300 border-solid text-center align-middle h-3 w-5 cursor-pointer transition-colors duration-200;
   @apply hover:bg-custom-skin;
 }
 
