@@ -3,7 +3,7 @@
     <div class="contain-in">
       <div id="add-timetable">
         <div class="row">
-          <h2>新增課表</h2>
+          <h2>{{ isEditMode ? '修改課表' : '新增課表' }}</h2>
           <button @click="saveTimetable" class="save-btn">儲存</button>
         </div>
         <div class="add-block">
@@ -114,6 +114,7 @@ export default {
     return{
       isClicked: false,
       isPeriodsOpen: false,
+      isEditMode: false,
       timetableName: '',
       courseList: [],
       newCourse: {
@@ -129,6 +130,33 @@ export default {
       categories: [
         '校必修', '系必修', '選修', '通識', '體育', '英文畢業門檻',
       ]
+    }
+  },
+  async created() {
+    // 檢查是否有 timetableId 作為參數
+    const timetableId = this.$route.query.timetableId;
+    if (timetableId) {
+      this.isEditMode = true;
+      const token = localStorage.getItem('token');
+      if(!token) {
+        alert("請先登入!");
+        this.$router.push('/login');
+        return;
+      }
+      try {
+        const res = await axios.get(`${process.env.VUE_APP_API_URL}/api/timetable/timetable/${timetableId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = res.data;
+        this.timetableName = data.timetableName;
+        this.courseList = data.courses || [];
+      } catch (err) {
+        console.error(err);
+        alert("無法取得課表資料，請稍後再試");
+        this.$router.push('/timetable');
+      }
     }
   },
   methods: {
@@ -164,6 +192,7 @@ export default {
         credits: 0,
         category: '',
       };
+      this.isClicked = false;
     },
     removeCourse(index) {
       this.courseList.splice(index, 1);
@@ -178,19 +207,31 @@ export default {
       if(!this.timetableName) return alert("請輸入課表名稱");
       if(this.courseList.length === 0) return alert("請新增至少一門課程");
       try {
-        const res = await axios.post(`${process.env.VUE_APP_API_URL}/api/timetable/addTimetable`,{
+        let res;
+        if(!this.isEditMode){
+          res = await axios.post(`${process.env.VUE_APP_API_URL}/api/timetable/addTimetable`,{
             timetable_name: this.timetableName,
             courses: this.courseList
-        },{
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
+          },{
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          alert('課表新增成功！');
+        } else {
+          const timetableId = this.$route.query.timetableId;
+          res = await axios.put(`${process.env.VUE_APP_API_URL}/api/timetable/updateTimetable/${timetableId}`,{
+            timetable_name: this.timetableName,
+            courses: this.courseList
+          },{
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          alert('課表更新成功！');
+        }
+        this.$router.push('/timetable');
         const data = res.data;
-
-        alert('課表新增成功！');
-        //跳轉到課表顯示頁面
         console.log(data);
       } catch (err) {
         console.error(err);
