@@ -21,7 +21,7 @@
                 <td class="big">地點</td>
                 <td class="small">學分</td>
                 <td class="big">類別</td>
-                <td class="small">操作</td>
+                <td class="action-button big">操作</td>
               </tr>
             </thead>
             <tbody>
@@ -33,8 +33,9 @@
                 <td class="big">{{ course.location }}</td>
                 <td class="small">{{ course.credits }}</td>
                 <td class="big">{{ course.category }}</td>
-                <td class="small">
-                  <button @click="removeCourse(index)" class="text-red-500 hover:text-red-700">X</button>
+                <td class="action-button big">
+                  <button @click="modifyCourse(index)">編輯</button>
+                  <button @click="removeCourse(index)">刪除</button>
                 </td>
               </tr>
             </tbody>
@@ -97,7 +98,7 @@
                   {{ category }}
                 </option>
               </select>
-              <button @click="addNewCourse" class="add-btn">新增</button>
+              <button @click="addNewCourse" class="add-btn">{{ isModifyCourse ? '修改' : '新增' }}</button>
             </div>
           </div>
         </div>
@@ -115,6 +116,8 @@ export default {
       isClicked: false,
       isPeriodsOpen: false,
       isEditMode: false,
+      isModifyCourse: false,
+      editingCourseIndex: null,
       timetableName: '',
       courseList: [],
       newCourse: {
@@ -134,7 +137,7 @@ export default {
   },
   async created() {
     // 檢查是否有 timetableId 作為參數
-    const timetableId = this.$route.query.timetableId;
+    const timetableId = this.$route.query.id;
     if (timetableId) {
       this.isEditMode = true;
       const token = localStorage.getItem('token');
@@ -160,8 +163,27 @@ export default {
     }
   },
   methods: {
+    resetForm() {
+      this.newCourse = {
+        name: '',
+        shortName: '',
+        time: [],
+        location: '',
+        credits: 0,
+        category: '',
+      };
+      this.isClicked = false;
+      this.isModifyCourse = false;
+      this.editingCourseIndex = null;
+      this.isPeriodsOpen = false;
+    },
     showForm(){
-      this.isClicked = !this.isClicked
+      if(this.isClicked){
+        this.resetForm();
+        this.isClicked = false;
+      } else {
+        this.isClicked = true;
+      }
     },
     getTimeValue(day, period) {
       return `${day+1}0${period+1}`;
@@ -183,18 +205,31 @@ export default {
     addNewCourse() {
       if(!this.newCourse.name) return alert("請輸入課名");
       //加進list
-      this.courseList.push(JSON.parse(JSON.stringify(this.newCourse)));
-      this.newCourse = {
-        name: '',
-        shortName: '',
-        time: [],
-        location: '',
-        credits: 0,
-        category: '',
-      };
+
+      const courseData = JSON.parse(JSON.stringify(this.newCourse));
+
+      if(this.isModifyCourse && this.editingCourseIndex !== null){
+        this.courseList.splice(this.editingCourseIndex, 1, courseData);
+      }else{
+        this.courseList.push(courseData);
+      }
+      this.resetForm();
       this.isClicked = false;
     },
+    modifyCourse(index) {
+      const course = this.courseList[index];
+      this.newCourse = JSON.parse(JSON.stringify(course));
+      this.isClicked = true;
+      this.isModifyCourse = true;
+      this.editingCourseIndex = index;
+    },
     removeCourse(index) {
+      if (this.isModifyCourse && this.editingIndex === index) {
+         this.resetForm();
+         this.isClicked = false;
+      } else if (this.isModifyCourse && index < this.editingIndex) {
+         this.editingIndex--;
+      }
       this.courseList.splice(index, 1);
     },
     async saveTimetable() {
@@ -219,7 +254,7 @@ export default {
           });
           alert('課表新增成功！');
         } else {
-          const timetableId = this.$route.query.timetableId;
+          const timetableId = this.$route.query.id;
           res = await axios.put(`${process.env.VUE_APP_API_URL}/api/timetable/updateTimetable/${timetableId}`,{
             timetable_name: this.timetableName,
             courses: this.courseList
@@ -303,6 +338,14 @@ h2 {
 
 .small {
   @apply w-1/12;
+}
+
+.action-button {
+  @apply p-0 m-0;
+}
+
+.action-button button{
+  @apply text-custom-brown bg-opacity-0 text-[10px] bg-custom-brown border border-solid border-custom-lightBrown rounded-sm m-0.5 hover:bg-opacity-80 hover:text-white;
 }
 
 .big {
