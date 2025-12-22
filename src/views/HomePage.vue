@@ -214,10 +214,16 @@ export default {
       if (!this.newTodo.content.trim()) return;
       const token = localStorage.getItem('token');
 
+      let isoDeadline = '';
+      if (this.newTodo.deadline) {
+        const deadlineDate = new Date(this.newTodo.deadline);
+        isoDeadline = deadlineDate.toISOString();
+      }
+
       try {
         const res = await axios.post(`${process.env.VUE_APP_API_URL}/api/todo`, 
           { content: this.newTodo.content,  
-            deadline: this.newTodo.deadline },
+            deadline: isoDeadline },
           { headers: { 'Authorization': `Bearer ${token}` }}
         );
         
