@@ -2,7 +2,7 @@
   <div class="contain">
     <div class="contain-in">
       <div id="add-timetable">
-        <div class="row">
+        <div class="row header-row">
           <h2>{{ isEditMode ? '修改課表' : '新增課表' }}</h2>
           <button @click="saveTimetable" class="save-btn">儲存</button>
         </div>
@@ -11,44 +11,52 @@
             <span>課表名稱</span>
             <input type="text" v-model="timetableName"/>
           </div>
-          <table class="show-add">
-            <thead>
-              <tr>
-                <td class="small">編號</td>
-                <td class="big">課名</td>
-                <td class="big">簡稱</td>
-                <td class="big">節次</td>
-                <td class="big">地點</td>
-                <td class="small">學分</td>
-                <td class="big">類別</td>
-                <td class="action-button big">操作</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(course, index) in courseList" :key="index">
-                <td class="small">{{ index + 1 }}</td>
-                <td class="big">{{ course.name }}</td>
-                <td class="big">{{ course.shortName }}</td>
-                <td class="big">{{ course.time.join(', ') }}</td>
-                <td class="big">{{ course.location }}</td>
-                <td class="small">{{ course.credits }}</td>
-                <td class="big">{{ course.category }}</td>
-                <td class="action-button big">
-                  <button @click="modifyCourse(index)">編輯</button>
-                  <button @click="removeCourse(index)">刪除</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <button @click="showForm" class="add-btn">+</button>
-          <div v-if="isClicked">
+          <div class="table-wrapper">
+            <table class="show-add">
+              <thead>
+                <tr>
+                  <td class="small">編號</td>
+                  <td class="big">課名</td>
+                  <td class="big">簡稱</td>
+                  <td class="big">節次</td>
+                  <td class="big">地點</td>
+                  <td class="small">學分</td>
+                  <td class="big">類別</td>
+                  <td class="action-button big">操作</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(course, index) in courseList" :key="index">
+                  <td class="small">{{ index + 1 }}</td>
+                  <td class="big">{{ course.name }}</td>
+                  <td class="big">{{ course.shortName }}</td>
+                  <td class="big">{{ course.time.join(', ') }}</td>
+                  <td class="big">{{ course.location }}</td>
+                  <td class="small">{{ course.credits }}</td>
+                  <td class="big">{{ course.category }}</td>
+                  <td class="action-button big">
+                    <button @click="modifyCourse(index)">編輯</button>
+                    <button @click="removeCourse(index)">刪除</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="btn-container">
+            <button @click="showForm" class="open-btn" :class="{'active': isClicked}">
+              {{ isClicked ? '-' : '+' }}
+            </button>
+          </div>
+
+          <div v-if="isClicked" class="form-container">
             <div class="block-row">
               <span>課名</span>
-              <input type="text" class="big" v-model="newCourse.name"/>
+              <input type="text" class="input-block" v-model="newCourse.name"/>
             </div>
             <div class="block-row">
               <span>簡稱</span>
-              <input type="text" class="small" v-model="newCourse.shortName"/>
+              <input type="text" class="input-block" v-model="newCourse.shortName"/>
             </div>
             <div class="block-row">
               <span>節次</span>
@@ -83,21 +91,24 @@
                 </table>
               </div>
             </div>
+
             <div class="block-row">
               <span>地點</span>
-              <input type="text" class="big" v-model="newCourse.location"/>
+              <input type="text" class="input-block" v-model="newCourse.location"/>
             </div>
             <div class="block-row">
               <span>學分</span>
-              <input type="number" min="0" class="small" v-model.number="newCourse.credits"/>
+              <input type="number" min="0" class="input-block" v-model.number="newCourse.credits"/>
             </div>
             <div class="block-row">
               <span>類別</span>
-              <select class="big" v-model="newCourse.category">
+              <select class="input-block" v-model="newCourse.category">
                 <option v-for="category in categories" :key="category" :value="category">
                   {{ category }}
                 </option>
               </select>
+            </div>
+            <div class="block-row">
               <button @click="addNewCourse" class="add-btn">{{ isModifyCourse ? '修改' : '新增' }}</button>
             </div>
           </div>
@@ -293,7 +304,11 @@ export default {
 }
 
 #add-timetable{
-  @apply relative z-10 flex flex-col items-center w-5/6 px-8 pb-4 bg-custom-skin rounded-lg shadow-2xl font-contentFont;
+  @apply relative z-10 flex flex-col items-center w-[95%] md:w-5/6 px-8 pb-4 bg-custom-skin rounded-lg shadow-2xl font-contentFont;
+}
+
+.header-row {
+  @apply flex justify-between items-center w-full mt-4 mb-3;
 }
 
 h2 {
@@ -309,11 +324,31 @@ h2 {
 }
 
 .block-row {
-  @apply flex w-full my-3 relative;
+  @apply flex flex-col md:flex-row w-full my-3 relative;
+}
+
+.input-responsive, .name-input {
+  @apply border-b border-t-0 border-r-0 border-l-0 px-2 py-1 bg-white bg-opacity-0 border-black transition-all;
+  @apply w-full md:mr-10;
+}
+@media (min-width: 768px) {
+    .input-responsive {
+        width: auto;
+        min-width: 200px;
+    }
+}
+
+.table-wrapper {
+  @apply w-full overflow-x-auto mb-4;
+  scrollbar-width: thin;
+}
+
+.realtive-row {
+  @apply relative;
 }
 
 .block-row span {
-  @apply w-1/12 text-left;
+  @apply w-full md:w-1/12 text-left text-sm md:text-base mb-1 md:mb-0 font-bold md:font-normal text-custom-brown md:text-black;
 }
 
 .block-row input {
@@ -321,7 +356,7 @@ h2 {
 }
 
 .block-row select {
-  @apply border-b border-t-0 border-r-0 border-l-0 px-2 py-1 bg-white bg-opacity-0 border-black mr-10;
+  @apply border-b border-t-0 border-r-0 border-l-0 px-2 py-1 bg-white bg-opacity-0 border-black mr-10 w-auto md:w-[217px];
 }
 
 .block-row tr {
@@ -329,37 +364,46 @@ h2 {
 }
 
 .show-add {
-  @apply table-fixed w-full border-separate border border-solid border-custom-brown mt-5 mb-10 rounded-md;
+  @apply w-full min-w-[600px] border-separate border border-solid border-custom-brown rounded-md;
 }
 
 .show-add td {
-  @apply border border-solid border-custom-brown p-1 text-center rounded-md;
+  @apply border border-solid border-custom-brown p-1 text-center rounded-md text-sm;
 }
 
-.small {
-  @apply w-1/12;
-}
-
-.action-button {
-  @apply p-0 m-0;
+.input-block {
+  @apply w-auto md:w-[200px];
 }
 
 .action-button button{
   @apply text-custom-brown bg-opacity-0 text-[10px] bg-custom-brown border border-solid border-custom-lightBrown rounded-sm m-0.5 hover:bg-opacity-80 hover:text-white;
 }
 
-.big {
-  @apply w-2/12;
+.btn-container {
+    @apply w-full flex justify-normal my-2;
+}
+
+.open-btn {
+  @apply bg-custom-brown text-white rounded-lg w-8 h-8 flex items-center justify-center hover:bg-opacity-80 transition font-contentFont text-xl pb-1;
+}
+
+.open-btn.active {
+    @apply opacity-50;
+}
+
+.form-container {
+    @apply border-t-2 border-custom-brown pt-4 mt-2;
 }
 
 .select-header {
   @apply flex justify-between items-center cursor-pointer 
          border-solid border-b border-t-0 border-r-0 border-l-0 border-black 
-         px-2 py-1 mr-10 bg-white bg-opacity-0;
+         px-2 py-1 mr-10 bg-white bg-opacity-0 w-auto md:w-[200px];
 }
 
 .select-header span {
   @apply transition-transform duration-300;
+  width: auto !important;
 }
 
 .select-header .rotate-up {
@@ -367,7 +411,11 @@ h2 {
 }
 
 .time-dropdown {
-  @apply absolute top-full left-[8.33%] z-50 mt-1 bg-white shadow-2xl border border-solid border-gray-300 rounded-lg w-auto overflow-hidden;
+  @apply absolute top-full left-0 md:left-[8.33%] z-50 mt-1 bg-white shadow-2xl border border-solid border-gray-300 rounded-lg w-full md:w-auto overflow-hidden;
+}
+
+.time-table-scroll {
+    @apply max-h-60 overflow-y-auto md:max-h-none md:overflow-visible;
 }
 
 .time {
@@ -401,6 +449,6 @@ h2 {
 }
 
 .add-btn {
-  @apply bg-custom-brown bg-opacity-100 text-white rounded hover:bg-opacity-80 transition font-contentFont;
+  @apply bg-custom-brown bg-opacity-100 text-white rounded hover:bg-opacity-80 mt-2 transition font-contentFont;
 }
 </style>

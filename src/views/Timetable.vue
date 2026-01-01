@@ -3,7 +3,7 @@
     <div class="contain-in">
       <div class="timetable">
         <div class="row">
-          <div>
+          <div class="select-group">
             <span>請選擇課表</span>
             <select v-model="current_timetable">
               <option v-for="item in timetableList" :key="item._id" :value="item._id">
@@ -19,29 +19,32 @@
             <button @click="addTimetable" class="add-btn">新增</button>
           </div>
         </div>
+
         <div class="show-block">
-          <table class="time">
-            <thead>
-              <tr>
-                <th class="empty-box"></th>
-                <th v-for="day in weekDays" :key="day" class="weekday-th">{{ day }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(period, pIndex) in periods" :key="pIndex">
-                <td class="period-td">{{ period }}</td>
-                        
-                <td 
-                  v-for="(day, dIndex) in weekDays" 
-                  :key="`${dIndex}-${pIndex}`"
-                  class="time-cell"
-                >
-                  <div>{{ getCourseName(dIndex+1, pIndex+1) }}</div>
-                  <div class="location">{{ getCourseLoca(dIndex+1, pIndex+1) }}</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-wrapper">
+            <table class="time">
+              <thead>
+                <tr>
+                  <th class="empty-box"></th>
+                  <th v-for="day in weekDays" :key="day" class="weekday-th">{{ day }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(period, pIndex) in periods" :key="pIndex">
+                  <td class="period-td">{{ period }}</td>
+                          
+                  <td 
+                    v-for="(day, dIndex) in weekDays" 
+                    :key="`${dIndex}-${pIndex}`"
+                    class="time-cell"
+                  >
+                    <div>{{ getCourseName(dIndex+1, pIndex+1) }}</div>
+                    <div class="location">{{ getCourseLoca(dIndex+1, pIndex+1) }}</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -185,15 +188,15 @@ export default {
 }
 
 .contain-in {
-  @apply relative z-10 flex flex-col items-center justify-center min-h-screen pt-10;
+  @apply relative z-10 flex flex-col items-center justify-center min-h-screen pt-4 md:pt-10 pb-4;
 }
 
 .timetable {
-  @apply relative z-10 flex flex-col items-center w-3/5 px-8 py-4 mt-10 bg-custom-skin rounded-lg shadow-2xl font-contentFont;
+  @apply relative z-10 flex flex-col items-center w-[85%] md:w-4/5 lg:w-3/5 px-4 md:px-8 py-4 mt-4 md:mt-10 bg-custom-skin rounded-lg shadow-2xl font-contentFont;
 }
 
 .row {
-  @apply flex justify-between w-full mb-3;
+  @apply flex flex-col md:flex-row justify-between w-full mb-3 gap-3 md:gap-0;
 }
 
 .row span {
@@ -205,11 +208,16 @@ export default {
 }
 
 .show-block {
-  @apply justify-between w-full bg-custom-lightSkin rounded-lg px-4 py-4;
+  @apply justify-between w-[95%] md:w-full bg-custom-lightSkin rounded-lg px-4 py-4;
+}
+
+.table-wrapper {
+  @apply w-full overflow-x-auto;
+  scrollbar-width: thin; 
 }
 
 .time {
-  @apply w-full border-separate border-spacing-1.5 bg-custom-lightSkin bg-opacity-0 text-base;
+  @apply w-full min-w-[600px] border-separate border-spacing-1.5 bg-custom-lightSkin bg-opacity-0 text-base;
 }
 
 .empty-box {
@@ -233,7 +241,7 @@ export default {
 }
 
 .action-buttons {
-  @apply flex gap-2;
+  @apply flex gap-2 w-full md:w-auto justify-end;
 }
 
 .action-buttons div{
